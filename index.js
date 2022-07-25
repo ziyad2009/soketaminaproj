@@ -8,7 +8,7 @@ const api =require('./api')
 
 const API_Key="b7ni1g.74mwfA:wI1s4RV0BJDXe7gDA_kXODQX8jcAGMIhdTmyCSh9TOE"
 const SERVER_PORT = process.env.PORT || 4000;
-const URL="http://34.200.104.211:3000"
+const URL="http://167.99.38.205:3000"
 const URL_DEV="http://localhost:3000"
 let nextVisitorNumber = 1;
 const onlineClients = new Set();
@@ -24,36 +24,38 @@ function onNewWebsocketConnection(socket) {
     console.info(`Socket ${socket.id} has connected.`);
     onlineClients.add(socket.id);
 
-  
-    socket.on("disconnect",async () => {
-        onlineClients.delete(socket.id);
-        console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
+    
+      socket.on("disconnect",async () => {
+          onlineClients.delete(socket.id);
+          console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
 
-        try{
-            await  api.post(`${URL_DEV}/setterofflaine`,{
-             userId:userID,
-             socketid:socket.id
-           }).then((res)=>{console.log("response data disconect",res.data)})
-         }catch(err){
-           console.log("Erorr,",err)
-         }
+          try{
+              await  api.post(`${URL}/setterofflaine`,{
+              userId:userID,
+              socketid:socket.id
+            }).then((res)=>{console.log("response data disconect",res.data)})
+          }catch(err){
+            console.log("Erorr,",err)
+          }
 
-    });
+      });
+  //serchbabysetes
+      socket.on(`setterlocation`,async(data)=>{
+        const {token,mainservice,service,coordinates}=data
+        console.log("setter ddata",data);
+          api.defaults.headers.Authorization = `Bearer ${token}`;
+          const response=await  api.post(`${URL}/setterlocation`,{
+            "coordinates":coordinates,
+            "mainservice":mainservice,
+            "service":service
+        }).then((res)=>{
+          console.log(res.data)
+          return res.data
+        }).catch(err=>console.log("Erorr",err))
+        
+      socket.emit("seteeslocation", response)
 
-    socket.on(`setterlocation`,async(data)=>{
-      const {token,mainservice,service,coordinates}=data
-      try{
-        api.defaults.headers.Authorization = `Bearer ${token}`;
-        await  api.post(`${URL_DEV}/setterlocation`,{
-          "coordinates":coordinates,
-          "mainservice":mainservice,
-          "service":service
-       }).then((res)=>{console.log("response data",res.data)})
-     }catch(err){
-       console.log("Erorr,",err)
-     }
-
-    })
+      })
     
     //Orders
     socket.on(`acceptedorder`,async (order)=>{
@@ -62,7 +64,7 @@ function onNewWebsocketConnection(socket) {
       console.log("order",order)
       
         api.defaults.headers.Authorization = `Bearer ${token}`;
-         response= await  api.post(`${URL_DEV}/setterorderaccepted`,{
+         response= await  api.post(`${URL}/setterorderaccepted`,{
           orderID:orderid
         }).then((res)=>{
           console.log("DATA, POST OK")
@@ -80,7 +82,7 @@ function onNewWebsocketConnection(socket) {
       console.log("order",order)
       
         api.defaults.headers.Authorization = `Bearer ${token}`;
-         response= await  api.post(`${URL_DEV}/setterorderaccepted`,{
+         response= await  api.post(`${URL}/setterorderaccepted`,{
           orderID:orderid
         }).then((res)=>{
           console.log("DATA, POST OK")
@@ -100,13 +102,14 @@ function onNewWebsocketConnection(socket) {
          userID=id
          
         try{
-           await  api.post(`${URL_DEV}/setteronlaine`,{
+           await  api.post(`${URL}/setteronlaine`,{
             userId:id,
             socketid:socket.id
           }).then((res)=>{console.log("response data",res.data)})
         }catch(err){
           console.log("Erorr,",err)
         }
+        
       
       
         socket.emit("userlogin", `welcome ${data.name}`)
@@ -118,7 +121,7 @@ function onNewWebsocketConnection(socket) {
        
         const {id,name}=data
         try{
-           await  api.post(`${URL_DEV}/setterofflaine`,{
+           await  api.post(`${URL}/setterofflaine`,{
             userId:id,
             socketid:socket.id
           }).then((res)=>{console.log("response logout Ok data",res.data )})
@@ -132,15 +135,19 @@ function onNewWebsocketConnection(socket) {
     })
     //baby seteer just onlaine
     socket.on("serchlocation",async (data) => {
+      console.log("setter ddata",data);
       const {token,service,mainservice}=data
       api.defaults.headers.Authorization = `Bearer ${token}`;
-      console.log("testDATA Mother",data)
-      const reponse =await  api.post(`${URL_DEV}/setterlocation`,{
+      console.log("test DATA Mother",data)
+      const reponse =await  api.post(`${URL}/setterlocation`,{
         "coordinates":[24.47362954961279, 39.60479835840555],
         "mainservice":mainservice,
         "service":service
         
-       }).then((res)=>{ return res.data}
+       }).then((res)=>{ 
+        console.log("DaTA Soket",res.data)
+         res.data
+        }
        ).catch((err)=>console.log("EROOR",err))
      
        socket.emit("seteeslocation", reponse)
