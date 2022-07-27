@@ -16,7 +16,7 @@ const onlineClients = new Set();
 function generateRandomNumber() {
     return (Math.floor(Math.random() * 1000)).toString();
 }
-
+ 
  
 function onNewWebsocketConnection(socket) {
     let userID
