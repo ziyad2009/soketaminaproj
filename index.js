@@ -39,7 +39,7 @@ function onNewWebsocketConnection(socket) {
           }
 
       });
-  //serchbabysetes
+  //serchbabysetes from APP
       socket.on(`setterlocation`,async(data)=>{
         const {token,mainservice,service,coordinates}=data
         console.log("setter ddata",data);
@@ -49,9 +49,9 @@ function onNewWebsocketConnection(socket) {
             "mainservice":mainservice,
             "service":service
         }).then((res)=>{
-          console.log(res.data)
+          console.log("DATA SETEER ",res.data)
           return res.data
-        }).catch(err=>console.log("Erorr",err))
+        }).catch(err=>console.log("Erorr 500 ",err.me))
         
       socket.emit("seteeslocation", response)
 
