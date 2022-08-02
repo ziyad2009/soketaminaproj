@@ -102,7 +102,44 @@ var filter2 = {
   console.log(response)
 
   }
-  orderTes()
+  
+
+  const sendApplication = async () => {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmUyNWJhZjEzZmI3MDA3MmUwYzU0NDciLCJpYXQiOjE2NTkwMDIwMDh9.aIhq3XftF6NlVnasc_LM-J5I4Ej4zfJkvtN6QiFzt74"
+    // const userUnparsed = await setItem.getItem('@user');
+    // const user = JSON.parse(userUnparsed);
+   // console.log(userLocation)
+    const dataToSend = {
+        name: "demo user",
+        age: 18,
+        brithdate: "12-12-1908",
+        city: "almadinah",
+        idcard: 1040960004,
+        mainservice: "حاضنة خاصة",
+        service:  "حالات خاصة",
+        location: {
+            coordinates: [24.47362954961279, 39.60479835840555],
+            "type":"Point"
+        },
+        phone:parseInt(966543437669),
+        gender: 'female',
+        address: "First Ring Road (King Faisal Road), Al-Manakhah, Medina 41419, Saudi Arabia",
+        photo: "http://www.clker.com/cliparts/c/8/R/n/d/U/user-md.png"
+    }
+    try {
+
+        api.defaults.headers.Authorization =token;
+        const currentUser = await api.post('/creatsetter', dataToSend);
+        if (currentUser) {
+            console.log('setter created', currentUser.data);
+            // dispatch(userAction({ setter: currentUser.data, user: user, token: token }));
+            // navigation.replace('BottomTabNavigator');
+        }
+    } catch (e) {
+        console.log('setter Not Created', e.message)
+    }
+}
  
+sendApplication()
 
   //console.log(orders)

@@ -1,14 +1,14 @@
 
-const { response } = require("express");
 const
     http = require("http"),
     express = require("express"),
     socketio = require("socket.io");
+
 const api =require('./api')
 
-const API_Key="b7ni1g.74mwfA:wI1s4RV0BJDXe7gDA_kXODQX8jcAGMIhdTmyCSh9TOE"
+// const API_Key="b7ni1g.74mwfA:wI1s4RV0BJDXe7gDA_kXODQX8jcAGMIhdTmyCSh9TOE"
 const SERVER_PORT = process.env.PORT || 4000;
-const URL="http://167.99.38.205:3000"
+const URL='http://167.99.38.205:3000'
 const URL_DEV="http://localhost:3000"
 let nextVisitorNumber = 1;
 const onlineClients = new Set();
@@ -24,12 +24,10 @@ function onNewWebsocketConnection(socket) {
     console.info(`Socket ${socket.id} has connected.`);
     onlineClients.add(socket.id);
 
-    
-      socket.on("disconnect",async () => {
+    socket.on("disconnect",async () => {
           onlineClients.delete(socket.id);
           console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
-
-          try{
+         try{
               await  api.post(`${URL}/setterofflaine`,{
               userId:userID,
               socketid:socket.id
@@ -80,8 +78,8 @@ function onNewWebsocketConnection(socket) {
       let response
       const{token,orderid}=order
       console.log("order",order)
-      
-        api.defaults.headers.Authorization = `Bearer ${token}`;
+        
+      api.defaults.headers.Authorization = `Bearer ${token}`;
          response= await  api.post(`${URL}/setterorderaccepted`,{
           orderID:orderid
         }).then((res)=>{
@@ -94,25 +92,54 @@ function onNewWebsocketConnection(socket) {
       
     })
 
+    //Genarl login  
+    
+    socket.on("newuser",async (data)=>{
+      let response
+     // console.log( "useer data login",data)
+      const {receiverid,username,token}=data
+    
+       userID=receiverid
+       
+        
+       setInterval(async    () => {
       
+        try {
+          api.defaults.headers.Authorization = `Bearer ${token}`;
+          let  response =await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
+            return res.data
+           })
+          
+           socket.emit("newnotifaction", response)
+           console.log("test  mot",response) 
+  
+         } catch (error) {
+            console.log("Erorr from notifactions",error)
+         }
+         
+      }, 3000);
+
+       
+       
+        
+       
+      
+  })
+  
 
     socket.on("login",async (data)=>{
-        console.log( "test data from device",data)
+        console.log( "useer data lofin",data)
         const {id,name}=data
          userID=id
-         
-        try{
+         try{
            await  api.post(`${URL}/setteronlaine`,{
             userId:id,
             socketid:socket.id
           }).then((res)=>{console.log("response data",res.data)})
-        }catch(err){
+          }catch(err){
           console.log("Erorr,",err)
-        }
-        
-      
-      
-        socket.emit("userlogin", `welcome ${data.name}`)
+          }
+           socket.emit("userlogin", `welcome ${data.name}`)
         
     })
 
@@ -140,7 +167,7 @@ function onNewWebsocketConnection(socket) {
       api.defaults.headers.Authorization = `Bearer ${token}`;
       console.log("test DATA Mother",data)
       const reponse =await  api.post(`${URL}/setterlocation`,{
-        "coordinates":[24.47362954961279, 39.60479835840555],
+        "coordinates":`[24.47362954961279, 39.60479835840555]`,
         "mainservice":mainservice,
         "service":service
         
