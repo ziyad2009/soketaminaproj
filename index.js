@@ -102,7 +102,7 @@ function onNewWebsocketConnection(socket) {
        userID=receiverid
        
         
-       setInterval(async    () => {
+       setInterval(async() => {
       
         try {
           api.defaults.headers.Authorization = `Bearer ${token}`;
@@ -117,7 +117,7 @@ function onNewWebsocketConnection(socket) {
             console.log("Erorr from notifactions",error)
          }
          
-      }, 3000);
+      }, 4000);
 
        
        
