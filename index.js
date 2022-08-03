@@ -101,7 +101,7 @@ function onNewWebsocketConnection(socket) {
     
        userID=receiverid
        
-       // socket.emit("welcomeuser",`welcome user ${username}`)
+       socket.emit("welcomeuser",`welcome user ${username}`)
        setInterval(async() => {
       
         try {
@@ -117,7 +117,7 @@ function onNewWebsocketConnection(socket) {
             console.log("Erorr from notifactions",error)
          }
          
-      }, 10000);
+      }, 7000);
 
        
        
