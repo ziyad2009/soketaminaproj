@@ -101,7 +101,7 @@ function onNewWebsocketConnection(socket) {
     
        userID=receiverid
        
-        socket.emit("welcomeuser",`welcome user ${username}`)
+       // socket.emit("welcomeuser",`welcome user ${username}`)
        setInterval(async() => {
       
         try {
