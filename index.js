@@ -31,7 +31,7 @@ function onNewWebsocketConnection(socket) {
               await  api.post(`${URL}/setterofflaine`,{
               userId:userID,
               socketid:socket.id
-            }).then((res)=>{console.log("response data disconect",res.data)})
+            }).then((res)=> {})
           }catch(err){
             console.log("Erorr,",err)
           }
@@ -101,7 +101,7 @@ function onNewWebsocketConnection(socket) {
     
        userID=receiverid
        
-        
+        socket.emit("welcomeuser",`welcome user ${username}`)
        setInterval(async() => {
       
         try {
@@ -117,7 +117,7 @@ function onNewWebsocketConnection(socket) {
             console.log("Erorr from notifactions",error)
          }
          
-      }, 4000);
+      }, 10000);
 
        
        
