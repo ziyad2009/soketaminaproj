@@ -3,8 +3,10 @@ const
     http = require("http"),
     express = require("express"),
     socketio = require("socket.io");
-
-const api =require('./api')
+const   config  = require("./config");
+ 
+const api =require('./api');
+const { default: axios } = require("axios");
 
 // const API_Key="b7ni1g.74mwfA:wI1s4RV0BJDXe7gDA_kXODQX8jcAGMIhdTmyCSh9TOE"
 const SERVER_PORT = process.env.PORT || 4000;
@@ -98,26 +100,47 @@ function onNewWebsocketConnection(socket) {
       let response
      // console.log( "useer data login",data)
       const {receiverid,username,token}=data
-    
        userID=receiverid
-       
-       socket.emit("welcomeuser",`welcome user ${username}`)
-       setInterval(async() => {
-      
-        try {
-          api.defaults.headers.Authorization = `Bearer ${token}`;
-          let  response =await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
-            return res.data
-           })
+       try {
+        api.defaults.headers.Authorization = `Bearer ${token}`;
+        response= await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
+        res.data
+             //console.log("test  mot from res",res.data) 
+             socket.emit("newnotifaction", res.data)
           
-           socket.emit("newnotifaction", response)
-           console.log("test  mot",response) 
+      })
+       } catch (error) {
+        console.log("test  mot from res",error) 
+       }
+     
+                  
+      
+
+
+      //         res.data
+      //         console.log("test  mot from res",res.data) 
+
+       
+      // socket.emit("welcomeuser",`welcome user ${username}`)
+      
+      // setInterval(async() => {
+      
+      //   try {
+      //       api.defaults.headers.Authorization = `Bearer ${token}`;
+      //     let  response =await api.get(`${URL_DEV}/notficationsacount/${receiverid}`).then((res)=>{
+      //         res.data
+      //         console.log("test  mot from res",res.data) 
+              
+      //      }) 
+      //      socket.emit("newnotifaction", res.data)
+          
+           
   
-         } catch (error) {
-            console.log("Erorr from notifactions",error)
-         }
+      //    } catch (error) {
+      //     socket.emit("newnotifaction", []),console.log(error)
+      //    }
          
-      }, 7000);
+      // }, 1000);
 
        
        
