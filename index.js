@@ -7,11 +7,14 @@ const   config  = require("./config");
  
 const api =require('./api');
 const { default: axios } = require("axios");
+const { setTimeout } = require("timers/promises");
 
 // const API_Key="b7ni1g.74mwfA:wI1s4RV0BJDXe7gDA_kXODQX8jcAGMIhdTmyCSh9TOE"
 const SERVER_PORT = process.env.PORT || 4000;
 const URL='http://167.99.38.205:3000'
 const URL_DEV="http://localhost:3000"
+
+
 let nextVisitorNumber = 1;
 const onlineClients = new Set();
 
@@ -27,22 +30,27 @@ function onNewWebsocketConnection(socket) {
     onlineClients.add(socket.id);
 
     socket.on("disconnect",async () => {
-          onlineClients.delete(socket.id);
+          
           console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
          try{
               await  api.post(`${URL}/setterofflaine`,{
               userId:userID,
               socketid:socket.id
-            }).then((res)=> {})
+            }).then((res)=> {
+              onlineClients.delete(socket.id);
+              console.log('baby settteer leave',res.data)
+            })
           }catch(err){
             console.log("Erorr,",err)
           }
 
       });
-  //serchbabysetes from APP
+
+      //serchbabysetes from APP by service 
       socket.on(`setterlocation`,async(data)=>{
+      
         const {token,mainservice,service,coordinates}=data
-        console.log("setter ddata",data);
+        //console.log("setter ddata",data);
           api.defaults.headers.Authorization = `Bearer ${token}`;
           const response=await  api.post(`${URL}/setterlocation`,{
             "coordinates":coordinates,
@@ -57,63 +65,41 @@ function onNewWebsocketConnection(socket) {
 
       })
     
-    //Orders
-    socket.on(`acceptedorder`,async (order)=>{
-      let response
-      const{token,orderid}=order
-      console.log("order",order)
-      
-        api.defaults.headers.Authorization = `Bearer ${token}`;
-         response= await  api.post(`${URL}/setterorderaccepted`,{
-          orderID:orderid
-        }).then((res)=>{
-          console.log("DATA, POST OK")
-          socket.emit("orders",res.data)
-         // console.log("DATA,",res.data)
-           
-
-        }).catch((err)=>console.log("ERORR",err))
-      
-    })
-
-    socket.on(`acceptedorder`,async (order)=>{
-      let response
-      const{token,orderid}=order
-      console.log("order",order)
-        
-      api.defaults.headers.Authorization = `Bearer ${token}`;
-         response= await  api.post(`${URL}/setterorderaccepted`,{
-          orderID:orderid
-        }).then((res)=>{
-          console.log("DATA, POST OK")
-          socket.emit("orders",res.data)
-         // console.log("DATA,",res.data)
-           
-
-        }).catch((err)=>console.log("ERORR",err))
-      
-    })
+    // 
 
     //Genarl login  
     
     socket.on("newuser",async (data)=>{
       let response
-     // console.log( "useer data login",data)
+       console.log( "useer data login",data)
       const {receiverid,username,token}=data
        userID=receiverid
-       try {
-        api.defaults.headers.Authorization = `Bearer ${token}`;
-        response= await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
-        res.data
-             //console.log("test  mot from res",res.data) 
-             socket.emit("newnotifaction", res.data)
-          
-      })
-       } catch (error) {
-        console.log("test  mot from res",error) 
-       }
-     
-                  
+       
+       const  start = new Date();
+       let  intersoket=setInterval(async()=>{
+ 
+          if (Date.now() - start > 550000) {
+            console.log("test notifaction stop++") 
+            clearInterval(intersoket);
+            return;
+          }
+        try {
+          api.defaults.headers.Authorization = `Bearer ${token}`;
+          response= await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
+          res.data
+               console.log("test notifaction account",res.data,"===",receiverid) 
+               socket.emit("newnotifaction", res.data)
+            
+        })
+         } catch (error) {
+          console.log("test  mot from res",error) 
+          // setTimeout(()=>{
+          //   clearInterval(intersoket)
+          //  },1000)
+
+         }
+       },2000)
+
       
 
 
@@ -244,3 +230,50 @@ function startServer() {
 
 startServer();
 
+
+
+
+
+
+
+
+
+
+
+
+//Orders
+    // socket.on(`acceptedorder`,async (order)=>{
+    //   let response
+    //   const{token,orderid}=order
+    //   console.log("order",order)
+      
+    //     api.defaults.headers.Authorization = `Bearer ${token}`;
+    //      response= await  api.post(`${URL}/setterorderaccepted`,{
+    //       orderID:orderid
+    //     }).then((res)=>{
+    //       console.log("DATA, POST OK")
+    //       socket.emit("orders",res.data)
+    //      // console.log("DATA,",res.data)
+           
+
+    //     }).catch((err)=>console.log("ERORR",err))
+      
+    // })
+
+    // socket.on(`acceptedorder`,async (order)=>{
+    //   let response
+    //   const{token,orderid}=order
+    //   console.log("order",order)
+        
+    //   api.defaults.headers.Authorization = `Bearer ${token}`;
+    //      response= await  api.post(`${URL}/setterorderaccepted`,{
+    //       orderID:orderid
+    //     }).then((res)=>{
+    //       console.log("DATA, POST OK")
+    //       socket.emit("orders",res.data)
+    //      // console.log("DATA,",res.data)
+           
+
+    //     }).catch((err)=>console.log("ERORR",err))
+      
+    // })
