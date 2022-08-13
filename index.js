@@ -86,19 +86,30 @@ function onNewWebsocketConnection(socket) {
         try {
           api.defaults.headers.Authorization = `Bearer ${token}`;
           response= await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
-          res.data
-               console.log("test notifaction account",res.data,"===",receiverid) 
+              
+               
+               console.log("test notifaction account","===",res.data) 
                socket.emit("newnotifaction", res.data)
-            
+              
         })
          } catch (error) {
-          console.log("test  mot from res",error) 
-          // setTimeout(()=>{
-          //   clearInterval(intersoket)
-          //  },1000)
+          setTimeout(()=>{
+                clearInterval(intersoket)
+               },1000)
+          console.log("test  mot from res",error.message) 
+          // if(error.message="Request failed with status code 401"){
+          //    console.log("erorr 401|++") 
+          //   setTimeout(()=>{
+          //     clearInterval(intersoket)
+          //    },1000)
+          // }
+          
+          setTimeout(()=>{
+            clearInterval(intersoket)
+           },1000)
 
          }
-       },2000)
+       },5000)
 
       
 
