@@ -49,17 +49,17 @@ function onNewWebsocketConnection(socket) {
       //serchbabysetes from APP by service 
       socket.on(`setterlocation`,async(data)=>{
       
-        const {token,mainservice,service,coordinates}=data
-        //console.log("setter ddata",data);
+        const {token,mainservice,service,coordinates,limit,skip}=data
+          console.log("setter ddata limit ",limit,"--",skip);
           api.defaults.headers.Authorization = `Bearer ${token}`;
-          const response=await  api.post(`${URL}/setterlocation`,{
+          const response=await  api.post(`${URL}/setterlocation?limit=${limit}&skip=${skip}`,{
             "coordinates":coordinates,
             "mainservice":mainservice,
             "service":service
         }).then((res)=>{
-          console.log("DATA SETEER ",res.data)
+         // console.log("DATA SETEER ",res.data)
           return res.data
-        }).catch(err=>console.log("Erorr 500 ",err.me))
+        }).catch(err=>console.log("Erorr 500 ",err.massege))
         
       socket.emit("seteeslocation", response)
 

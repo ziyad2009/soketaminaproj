@@ -832,7 +832,16 @@ var filter2 = {
     }
 }
 
-console.log(notfication.length)
+
+
+let obj = arr.find((o, i) => {
+    if (o.name === 'string 1') {
+        arr[i] = { name: 'new string', value: 'this', other: 'that' };
+        return true; // stop searching
+    }
+});
+
+console.log(arr);
  
 //sendApplication()
 
