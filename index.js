@@ -50,16 +50,16 @@ function onNewWebsocketConnection(socket) {
       socket.on(`setterlocation`,async(data)=>{
       
         const {token,mainservice,service,coordinates,limit,skip}=data
-          console.log("setter ddata limit ",limit,"--",skip);
+          console.log("setter data by ++ limit ",limit,"--",skip);
           api.defaults.headers.Authorization = `Bearer ${token}`;
-          const response=await  api.post(`${URL}/setterlocation?limit=${limit}&skip=${skip}`,{
+          const response=await  api.post(`${URL_DEV}/setterlocation?limit=${limit}&skip=${skip}`,{
             "coordinates":coordinates,
             "mainservice":mainservice,
             "service":service
         }).then((res)=>{
          // console.log("DATA SETEER ",res.data)
           return res.data
-        }).catch(err=>console.log("Erorr 500 ",err.massege))
+        }).catch(err=>console.log("Erorr 500 ",err.message))
         
       socket.emit("seteeslocation", response)
 
