@@ -52,7 +52,7 @@ function onNewWebsocketConnection(socket) {
         const {token,mainservice,service,coordinates,limit,skip}=data
           console.log("setter data by ++ limit ",limit,"--",skip);
           api.defaults.headers.Authorization = `Bearer ${token}`;
-          const response=await  api.post(`${URL_DEV}/setterlocation?limit=${limit}&skip=${skip}`,{
+          const response=await  api.post(`${URL}/setterlocation?limit=${limit}&skip=${skip}`,{
             "coordinates":coordinates,
             "mainservice":mainservice,
             "service":service
