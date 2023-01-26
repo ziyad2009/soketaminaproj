@@ -30,8 +30,7 @@ function onNewWebsocketConnection(socket) {
     onlineClients.add(socket.id);
 
     socket.on("disconnect",async () => {
-          
-          console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
+      console.info(`Socket ${socket.id} has disconnected.`,"ID:",userID);
          try{
               await  api.post(`${URL}/setterofflaine`,{
               userId:userID,
@@ -41,7 +40,7 @@ function onNewWebsocketConnection(socket) {
               console.log('baby settteer leave',res.data)
             })
           }catch(err){
-            console.log("Erorr,",err)
+            console.log("Erorr",err)
           }
 
       });
@@ -67,11 +66,9 @@ function onNewWebsocketConnection(socket) {
     
     // 
 
-    //Genarl login  
-    
+    //Genarl login
     socket.on("newuser",async (data)=>{
-      let response
-       console.log( "useer data login",data)
+      console.log( "useer data login",data)
       const {receiverid,username,token}=data
        userID=receiverid
        
@@ -86,8 +83,6 @@ function onNewWebsocketConnection(socket) {
         try {
           api.defaults.headers.Authorization = `Bearer ${token}`;
           response= await api.get(`${URL}/notficationsacount/${receiverid}`).then((res)=>{
-              
-               
                console.log("test notifaction account","===",res.data) 
                socket.emit("newnotifaction", res.data)
               
@@ -110,41 +105,7 @@ function onNewWebsocketConnection(socket) {
 
          }
        },5000)
-
-      
-
-
-      //         res.data
-      //         console.log("test  mot from res",res.data) 
-
-       
-      // socket.emit("welcomeuser",`welcome user ${username}`)
-      
-      // setInterval(async() => {
-      
-      //   try {
-      //       api.defaults.headers.Authorization = `Bearer ${token}`;
-      //     let  response =await api.get(`${URL_DEV}/notficationsacount/${receiverid}`).then((res)=>{
-      //         res.data
-      //         console.log("test  mot from res",res.data) 
-              
-      //      }) 
-      //      socket.emit("newnotifaction", res.data)
-          
-           
-  
-      //    } catch (error) {
-      //     socket.emit("newnotifaction", []),console.log(error)
-      //    }
-         
-      // }, 1000);
-
-       
-       
-        
-       
-      
-  })
+      })
   
 
     socket.on("login",async (data)=>{
@@ -206,7 +167,7 @@ function onNewWebsocketConnection(socket) {
     // will send a message only to this socket (different than using `io.emit()`, which would broadcast it)
     socket.emit("welcome", `Welcome! You are visitor number ${nextVisitorNumber++}`);
 }
-
+ 
 function startServer() {
     // create a new express app
     const app = express();
