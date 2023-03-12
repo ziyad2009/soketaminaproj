@@ -60,7 +60,7 @@ function onNewWebsocketConnection(socket) {
           return res.data
         }).catch(err=>console.log("Erorr 500 ",err.message))
         
-      socket.emit("seteeslocation", response)
+       socket.emit("seteeslocation", response)
 
       })
     
@@ -68,7 +68,7 @@ function onNewWebsocketConnection(socket) {
 
     //Genarl login
     socket.on("newuser",async (data)=>{
-      console.log( "useer data login",data)
+      console.log( "new user data login by soket",data)
       const {receiverid,username,token}=data
        userID=receiverid
        
@@ -121,8 +121,10 @@ function onNewWebsocketConnection(socket) {
           console.log("Erorr,",err)
           }
            socket.emit("userlogin", `welcome ${data.name}`)
+           socket.broadcast.emit("eventnow",data);
         
     })
+  
 
 
     socket.on("logout",async (data)=>{
