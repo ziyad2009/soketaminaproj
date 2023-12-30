@@ -4,7 +4,7 @@ function dateDifference(start, end) {
     
     var s = new Date(start);
     var e = new Date(end);
-    
+     
       var addOneMoreDay = 0;
       if( s.getDay() == 0 || s.getDay() == 6 ) {
         addOneMoreDay = 1;
@@ -40,7 +40,7 @@ function dateDifference(start, end) {
     var weekEndDays = totalDays - days + addOneMoreDay;
     return weekEndDays;
   }
-  
+
   var date1 = "2023-09-28";
   var date2 = "2023-10-10";
   console.log(dateDifference( date1, date2));
