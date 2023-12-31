@@ -41,6 +41,6 @@ function dateDifference(start, end) {
     return weekEndDays;
   }
 
-  var date1 = "2023-09-28";
+  var date1 = "2023-09-28"; 
   var date2 = "2023-10-10";
   console.log(dateDifference( date1, date2));
